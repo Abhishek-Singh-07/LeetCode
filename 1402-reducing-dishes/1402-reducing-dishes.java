@@ -1,20 +1,15 @@
 class Solution {
-    Integer[][] dp;
     public int maxSatisfaction(int[] satisfaction) {
         Arrays.sort(satisfaction);
         int n=satisfaction.length;
-        dp=new Integer[n][n + 1];
-        return solve(0,1,satisfaction);
-    }
-    private int solve(int i,int time,int[] sat) {
-        if(i==sat.length)
-            return 0;
-        if(dp[i][time] != null)
-            return dp[i][time];
-        // Pick
-        int pick=sat[i]*time+solve(i+1,time+1,sat);
-        // Not Pick
-        int notPick=solve(i+1,time,sat);
-        return dp[i][time]=Math.max(pick,notPick);
+        int[][] dp=new int[n+1][n+2];
+        for(int i=n-1;i>=0;i--) {
+            for(int time=n;time>=1;time--) {
+                int pick=satisfaction[i]*time+dp[i+1][time+1];
+                int notPick=dp[i+1][time];
+                dp[i][time]=Math.max(pick,notPick);
+            }
+        }
+        return dp[0][1];
     }
 }
